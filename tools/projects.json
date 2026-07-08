@@ -1,0 +1,64 @@
+{
+  "name": "adam barnett",
+  "role": "director of photography",
+  "email": "adambarnettdop@gmail.com",
+  "projects": [
+    {
+      "slug": "black-cab",
+      "title": "black cab",
+      "meta": "narrative short",
+      "film": true, "filmLabel": "trailer",
+      "loop": true
+    },
+    {
+      "slug": "tfhiaf",
+      "title": "they found her in a field",
+      "meta": "narrative short",
+      "film": true, "filmLabel": "teaser",
+      "loop": true
+    },
+    {
+      "slug": "colour-of-my-room",
+      "title": "colour of my room",
+      "meta": "narrative short",
+      "film": true, "filmLabel": "film",
+      "loop": true,
+      "bts": "colour-of-my-room-bts"
+    },
+    {
+      "slug": "alice",
+      "title": "alice",
+      "meta": "narrative short",
+      "film": true, "filmLabel": "teaser",
+      "loop": true
+    },
+    {
+      "slug": "if-they-come",
+      "title": "if they come",
+      "meta": "narrative short",
+      "film": true, "filmLabel": "film",
+      "loop": true
+    },
+    {
+      "slug": "oh-wonder-22-break",
+      "title": "oh wonder — 22 break",
+      "meta": "music promo",
+      "film": true, "filmLabel": "trailer",
+      "loop": true
+    },
+    {
+      "slug": "luis-rojo-bruisedhug",
+      "title": "artur m. puga — bruisehug",
+      "meta": "music promo",
+      "film": true, "filmLabel": "promo",
+      "loop": true
+    },
+    {
+      "slug": "dirty-danger-run",
+      "title": "dirty danger — run",
+      "meta": "music promo",
+      "film": true, "filmLabel": "promo",
+      "loop": true
+    }
+  ]
+}

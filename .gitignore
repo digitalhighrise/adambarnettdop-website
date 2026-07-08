@@ -1,0 +1,8 @@
+# Full films are 1.3GB with files >100MB — exceed GitHub limits; host on a
+# video CDN / Vimeo instead. Loops, stills and posters are kept in the repo.
+assets/films/
+
+node_modules/
+.vercel
+.DS_Store
+Thumbs.db
