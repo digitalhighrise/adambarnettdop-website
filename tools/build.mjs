@@ -7,6 +7,10 @@ import { fileURLToPath } from "node:url";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const data = JSON.parse(readFileSync(join(root, "tools", "projects.json"), "utf8"));
 
+/* full films live on Cloudflare R2 (1.3GB total, files >100MB — too big for
+   the git repo / Vercel deploy). Loops, stills and posters stay local. */
+const FILMS_BASE = "https://pub-23da5571b7904d2d86965021887fa2b2.r2.dev/films";
+
 const stillsOf = (slug) => {
   const dir = join(root, "assets", "stills", slug);
   if (!existsSync(dir)) return [];
@@ -135,7 +139,9 @@ allProjects.forEach((p, idx) => {
   const filmBlock = p.film
     ? `    <section class="filmblock">
       <p class="mono">${p.filmLabel}</p>
-      <video controls preload="none" poster="../assets/posters/${p.slug}.jpg" src="../assets/films/${p.slug}.mp4"></video>
+      ${p.filmUnavailable
+        ? `<p class="mono filmnote">${p.filmUnavailable}</p>`
+        : `<video controls preload="none" poster="../assets/posters/${p.slug}.jpg" src="${FILMS_BASE}/${p.slug}.mp4"></video>`}
     </section>`
     : "";
 

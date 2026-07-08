@@ -334,6 +334,7 @@ img, video { display: block; max-width: 100%; }
 .filmblock { max-width: 1240px; margin: 0 auto clamp(56px, 10vh, 120px); }
 .filmblock .mono { margin-bottom: 14px; }
 .filmblock video { width: 100%; background: #000; }
+.filmblock .filmnote { margin-bottom: 0; font-style: italic; }
 
 .stillsgrid {
   max-width: 1440px;
