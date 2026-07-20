@@ -1,5 +1,4 @@
-# Full films (1.3GB, files >100MB) — exceed Vercel's per-file limit.
-# Host them on a video CDN / Vimeo and reference those URLs instead.
 assets/films/
-node_modules/
-.git/
+tools/
+.vercel
+.git
