@@ -2,26 +2,30 @@
   "name": "adam barnett",
   "role": "director of photography",
   "email": "adambarnettdop@gmail.com",
+  "bio": "adam barnett is a director of photography working across narrative, commercials and music promos. a graduate of the nfts cinematography ma, his work spans television drama, short film and promos. born in manchester by way of newcastle, he is based in london and represented worldwide by wpa.",
   "projects": [
     {
       "slug": "black-cab",
       "title": "black cab",
       "meta": "narrative short",
-      "film": true, "filmLabel": "trailer",
+      "film": true,
+      "filmLabel": "trailer",
       "loop": true
     },
     {
       "slug": "tfhiaf",
       "title": "they found her in a field",
       "meta": "narrative short",
-      "film": true, "filmLabel": "teaser",
+      "film": true,
+      "filmLabel": "teaser",
       "loop": true
     },
     {
       "slug": "colour-of-my-room",
       "title": "colour of my room",
       "meta": "narrative short",
-      "film": true, "filmLabel": "film",
+      "film": true,
+      "filmLabel": "film",
       "filmUnavailable": "Unavailable due to festival rights",
       "loop": true,
       "bts": "colour-of-my-room-bts"
@@ -30,36 +34,100 @@
       "slug": "alice",
       "title": "alice",
       "meta": "narrative short",
-      "film": true, "filmLabel": "teaser",
+      "film": true,
+      "filmLabel": "teaser",
       "loop": true
     },
     {
       "slug": "if-they-come",
       "title": "if they come",
       "meta": "narrative short",
-      "film": true, "filmLabel": "film",
+      "film": true,
+      "filmLabel": "film",
       "loop": true
     },
     {
       "slug": "oh-wonder-22-break",
       "title": "oh wonder — 22 break",
       "meta": "music promo",
-      "film": true, "filmLabel": "trailer",
+      "film": true,
+      "filmLabel": "trailer",
       "loop": true
     },
     {
       "slug": "luis-rojo-bruisedhug",
       "title": "artur m. puga — bruisehug",
       "meta": "music promo",
-      "film": true, "filmLabel": "promo",
+      "film": true,
+      "filmLabel": "promo",
       "loop": true
     },
     {
       "slug": "dirty-danger-run",
       "title": "dirty danger — run",
       "meta": "music promo",
-      "film": true, "filmLabel": "promo",
+      "film": true,
+      "filmLabel": "promo",
       "loop": true
+    }
+  ],
+  "moreWork": [
+    {
+      "label": "selected tv work",
+      "items": [
+        {
+          "slug": "just-act-normal",
+          "title": "just act normal",
+          "meta": "television — camera & grade tests",
+          "loop": true,
+          "film": false
+        },
+        {
+          "slug": "champion",
+          "title": "champion",
+          "meta": "television — bbc + netflix",
+          "loop": true,
+          "film": false
+        },
+        {
+          "slug": "boombox",
+          "title": "boom box",
+          "meta": "television — hbo series",
+          "loop": true,
+          "film": false
+        }
+      ]
+    },
+    {
+      "label": "selected other",
+      "items": [
+        {
+          "slug": "royal-marines",
+          "title": "royal marines",
+          "meta": "commercial",
+          "loop": true,
+          "film": false
+        },
+        {
+          "slug": "bmth-strangers",
+          "title": "bring me the horizon",
+          "meta": "music promo",
+          "loop": true,
+          "film": false
+        },
+        {
+          "slug": "eaves-wilder-the-great-plain",
+          "title": "eaves wilder — the great plain",
+          "meta": "music promo",
+          "loop": true,
+          "film": false
+        }
+      ]
+    },
+    {
+      "label": "photography + stills",
+      "soon": true,
+      "items": []
     }
   ]
 }

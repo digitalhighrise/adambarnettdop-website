@@ -32,25 +32,7 @@ const vf = ``; // viewfinder corner marks removed
 
 /* secondary projects shown under the "selected work" expanders (not in the
    main reel). Same shape as data.projects so they get work pages too. */
-const moreWork = [
-  {
-    label: "selected tv work",
-    items: [
-      { slug: "just-act-normal", title: "just act normal", meta: "television — camera & grade tests", loop: true, film: false },
-      { slug: "champion", title: "champion", meta: "television — bbc + netflix", loop: true, film: false },
-      { slug: "boombox", title: "boom box", meta: "television — hbo series", loop: true, film: false },
-    ],
-  },
-  {
-    label: "selected other",
-    items: [
-      { slug: "royal-marines", title: "royal marines", meta: "commercial", loop: true, film: false },
-      { slug: "bmth-strangers", title: "bring me the horizon", meta: "music promo", loop: true, film: false },
-      { slug: "eaves-wilder-the-great-plain", title: "eaves wilder — the great plain", meta: "music promo", loop: true, film: false },
-    ],
-  },
-  { label: "photography + stills", soon: true, items: [] },
-];
+const moreWork = data.moreWork;
 const moreWorkFlat = moreWork.flatMap((s) => s.items);
 const allProjects = data.projects.concat(moreWorkFlat);
 
@@ -213,10 +195,7 @@ ${btsBlock}
     </header>
 
     <div class="content">
-      <p class="bio">adam barnett is a director of photography working across narrative,
-      commercials and music promos. a graduate of the nfts cinematography ma,
-      his work spans television drama, short film and promos. born in manchester
-      by way of newcastle, he is based in london and represented worldwide by wpa.</p>
+      <p class="bio">${data.bio}</p>
 
       <div class="contactblock">
         <div>

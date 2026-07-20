@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>site admin - adam barnett</title>
+<link rel="stylesheet" href="/assets/fonts/fonts.css">
+<link rel="icon" href="/assets/favicon.svg">
+<style>
+:root {
+  --bg: #0a0a0b; --ink: #eae7e0; --dim: #8a867e;
+  --line: rgba(234,231,224,0.16); --signal: #c8452f;
+  --sans: "Familjen Grotesk", system-ui, sans-serif;
+  --mono: "Space Mono", ui-monospace, monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 15px; line-height: 1.5; min-height: 100vh; }
+a { color: inherit; }
+.mono { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; color: var(--dim); }
+.wrap { max-width: 760px; margin: 0 auto; padding: 40px 20px 120px; }
+h1 { font-size: 20px; font-weight: 500; }
+h1 .role { color: var(--dim); font-weight: 400; }
+header.top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 36px; }
+button { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; background: none; border: 1px solid var(--line); color: var(--ink); padding: 7px 14px; cursor: pointer; }
+button:hover { border-color: var(--ink); }
+button.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+button.danger:hover { border-color: var(--signal); color: var(--signal); }
+button.small { padding: 3px 8px; font-size: 10px; }
+input[type=text], input[type=email], input[type=password], textarea {
+  width: 100%; background: none; border: 1px solid var(--line); color: var(--ink);
+  font-family: var(--sans); font-size: 14px; padding: 8px 10px;
+}
+input:focus, textarea:focus { outline: none; border-color: var(--dim); }
+textarea { min-height: 110px; resize: vertical; }
+label.field { display: block; margin: 14px 0 0; }
+label.field span { display: block; margin-bottom: 5px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; color: var(--dim); }
+label.check { display: inline-flex; align-items: center; gap: 7px; margin: 14px 18px 0 0; font-size: 13px; color: var(--dim); cursor: pointer; }
+section.block { border-top: 1px solid var(--line); padding: 22px 0; }
+.sechead { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+ul.plist { list-style: none; }
+ul.plist li.row { border: 1px solid transparent; border-bottom-color: var(--line); }
+.rowbar { display: flex; align-items: center; gap: 8px; padding: 9px 4px; }
+.rowbar .t { flex: 1; cursor: pointer; }
+.rowbar .t .m { color: var(--dim); font-size: 12px; margin-left: 8px; }
+.editor { padding: 4px 4px 20px; border-top: 1px dashed var(--line); }
+.stillsgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; margin-top: 8px; }
+.stillsgrid .cell { position: relative; }
+.stillsgrid img { width: 100%; aspect-ratio: 16/10; object-fit: cover; display: block; opacity: 0.9; }
+.stillsgrid .del { position: absolute; top: 4px; right: 4px; background: rgba(10,10,11,0.75); border: none; color: var(--ink); width: 20px; height: 20px; line-height: 1; cursor: pointer; }
+.stillsgrid .del:hover { color: var(--signal); }
+.uprow { display: flex; gap: 10px; align-items: center; margin-top: 10px; flex-wrap: wrap; }
+.hint { font-size: 12px; color: var(--dim); margin-top: 6px; }
+.savebar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(10,10,11,0.92); border-top: 1px solid var(--line); backdrop-filter: blur(6px); }
+.savebar .in { max-width: 760px; margin: 0 auto; padding: 12px 20px; display: flex; gap: 14px; align-items: center; }
+.savebar .status { flex: 1; }
+.savebar .status.err { color: var(--signal); }
+#login { max-width: 320px; margin: 22vh auto 0; padding: 0 20px; }
+#login h1 { margin-bottom: 18px; }
+#login .err { color: var(--signal); font-size: 13px; margin-top: 10px; min-height: 18px; }
+.hidden { display: none !important; }
+input[type=file] { display: none; }
+.filebtn { display: inline-block; }
+</style>
+</head>
+<body>
+
+<div id="login">
+  <h1>adam barnett <span class="role">/ site admin</span></h1>
+  <form id="loginform">
+    <label class="field"><span>password</span><input type="password" id="pw" autocomplete="current-password"></label>
+    <div style="margin-top:14px"><button class="primary" type="submit">log in</button></div>
+    <p class="err" id="loginerr"></p>
+  </form>
+</div>
+
+<div id="app" class="hidden">
+  <div class="wrap">
+    <header class="top">
+      <h1>adam barnett <span class="role">/ site admin</span></h1>
+      <button id="logout">log out</button>
+    </header>
+
+    <section class="block">
+      <p class="mono">about + contact</p>
+      <label class="field"><span>bio</span><textarea id="bio"></textarea></label>
+      <label class="field"><span>email</span><input type="email" id="email"></label>
+    </section>
+
+    <div id="sections"></div>
+
+    <p class="hint">text changes are only applied when you press save. photos and videos upload straight away. save also republishes every page of the site.</p>
+  </div>
+
+  <div class="savebar">
+    <div class="in">
+      <p class="mono status" id="status">loaded</p>
+      <button class="primary" id="save">save changes</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let state = null;   // {data, media}
+let dirty = false;
+
+const $ = (s, el) => (el || document).querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const setStatus = (msg, err) => { const el = $("#status"); el.textContent = msg; el.classList.toggle("err", !!err); };
+const markDirty = () => { dirty = true; setStatus("unsaved changes"); };
+
+const api = async (path, opts = {}) => {
+  const res = await fetch(path, { headers: { "content-type": "application/json" }, ...opts });
+  const body = await res.json().catch(() => ({}));
+  if (res.status === 401) { showLogin(); throw new Error(body.error || "not logged in"); }
+  if (!res.ok) throw new Error(body.error || `request failed (${res.status})`);
+  return body;
+};
+
+const slugify = (t) => t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "untitled";
+
+/* ---------- sections: latest work is data.projects, then each moreWork group ---------- */
+const sections = () => {
+  const s = [{ label: "latest work", fixed: true, items: state.data.projects }];
+  state.data.moreWork.forEach((g) => s.push(g));
+  return s;
+};
+
+const open = new Set(); // slugs with the editor expanded
+
+function render() {
+  $("#bio").value = state.data.bio;
+  $("#email").value = state.data.email;
+  const host = $("#sections");
+  host.innerHTML = "";
+  sections().forEach((sec, si) => {
+    const block = document.createElement("section");
+    block.className = "block";
+    block.innerHTML = `
+      <div class="sechead">
+        ${sec.fixed
+          ? `<p class="mono">latest work</p>`
+          : `<input type="text" data-seclabel="${si}" value="${esc(sec.label)}" style="max-width:280px">`}
+        <div>
+          ${sec.fixed ? "" : `<label class="check" style="margin:0 10px 0 0"><input type="checkbox" data-secsoon="${si}" ${sec.soon ? "checked" : ""}>coming soon</label>`}
+          <button class="small" data-add="${si}">add project</button>
+        </div>
+      </div>
+      <ul class="plist">${(sec.items || []).map((p, pi) => row(p, si, pi, sec.items.length)).join("")}</ul>`;
+    host.appendChild(block);
+  });
+  wire();
+}
+
+const row = (p, si, pi, len) => `
+  <li class="row" data-si="${si}" data-pi="${pi}">
+    <div class="rowbar">
+      <button class="small" data-move="up" ${pi === 0 ? "disabled" : ""}>&uarr;</button>
+      <button class="small" data-move="down" ${pi === len - 1 ? "disabled" : ""}>&darr;</button>
+      <span class="t">${esc(p.title)}<span class="m">${esc(p.meta || "")}</span></span>
+      <button class="small" data-edit>${open.has(p.slug) ? "close" : "edit"}</button>
+      <button class="small danger" data-del>remove</button>
+    </div>
+    ${open.has(p.slug) ? editor(p) : ""}
+  </li>`;
+
+const editor = (p) => {
+  const m = state.media[p.slug] || { stills: [], hasLoop: false, hasPoster: false };
+  return `
+  <div class="editor">
+    <label class="field"><span>title</span><input type="text" data-f="title" value="${esc(p.title)}"></label>
+    <label class="field"><span>subtitle (e.g. narrative short, music promo)</span><input type="text" data-f="meta" value="${esc(p.meta || "")}"></label>
+    <label class="check"><input type="checkbox" data-f="film" ${p.film ? "checked" : ""}>full film on page</label>
+    <label class="check"><input type="checkbox" data-f="loop" ${p.loop ? "checked" : ""}>hover loop</label>
+    <label class="field"><span>film button label (film / trailer / teaser / promo)</span><input type="text" data-f="filmLabel" value="${esc(p.filmLabel || "")}"></label>
+    <label class="field"><span>film unavailable note (leave blank if the film can play)</span><input type="text" data-f="filmUnavailable" value="${esc(p.filmUnavailable || "")}"></label>
+
+    <label class="field"><span>stills (${m.stills.length} uploaded, first 8 shown on the page)</span></label>
+    <div class="stillsgrid">
+      ${m.stills.map((f) => `
+        <div class="cell">
+          <img src="/assets/stills/${p.slug}/${f}?v=${Date.now()}" loading="lazy" alt="">
+          <button class="del" title="delete still" data-delstill="${f}">&times;</button>
+        </div>`).join("")}
+    </div>
+    <div class="uprow">
+      <label class="filebtn"><span><button class="small" type="button" data-proxy>upload stills</button></span>
+        <input type="file" accept="image/*" multiple data-upstills></label>
+      <label class="filebtn"><span><button class="small" type="button" data-proxy>${m.hasPoster ? "replace poster" : "upload poster"}</button></span>
+        <input type="file" accept="image/*" data-upposter></label>
+      <label class="filebtn"><span><button class="small" type="button" data-proxy>${m.hasLoop ? "replace hover loop" : "upload hover loop (mp4)"}</button></span>
+        <input type="file" accept="video/mp4" data-uploop></label>
+    </div>
+    <p class="hint">stills are resized automatically. the hover loop should be a short muted mp4, about 15 seconds. full films are added separately, ask anthony.</p>
+  </div>`;
+};
+
+/* ---------- events ---------- */
+function wire() {
+  document.querySelectorAll("[data-seclabel]").forEach((el) =>
+    el.addEventListener("input", () => { state.data.moreWork[el.dataset.seclabel - 1].label = el.value; markDirty(); }));
+  document.querySelectorAll("[data-secsoon]").forEach((el) =>
+    el.addEventListener("change", () => { state.data.moreWork[el.dataset.secsoon - 1].soon = el.checked; markDirty(); }));
+  document.querySelectorAll("[data-add]").forEach((el) =>
+    el.addEventListener("click", () => {
+      const items = sections()[el.dataset.add].items;
+      const title = "new project";
+      const p = { slug: uniqueSlug(slugify(title)), title, meta: "", film: false, loop: false };
+      items.push(p);
+      open.add(p.slug);
+      markDirty(); render();
+    }));
+
+  document.querySelectorAll("li.row").forEach((li) => {
+    const sec = sections()[li.dataset.si];
+    const p = sec.items[li.dataset.pi];
+
+    $("[data-edit]", li).addEventListener("click", () => { open.has(p.slug) ? open.delete(p.slug) : open.add(p.slug); render(); });
+    $(".rowbar .t", li).addEventListener("click", () => { open.has(p.slug) ? open.delete(p.slug) : open.add(p.slug); render(); });
+    $("[data-del]", li).addEventListener("click", () => {
+      if (!confirm(`remove "${p.title}" from the site? its photos stay on disk and it comes back if re-added with the same slug.`)) return;
+      sec.items.splice(li.dataset.pi, 1); markDirty(); render();
+    });
+    li.querySelectorAll("[data-move]").forEach((b) => b.addEventListener("click", () => {
+      const i = Number(li.dataset.pi), j = b.dataset.move === "up" ? i - 1 : i + 1;
+      [sec.items[i], sec.items[j]] = [sec.items[j], sec.items[i]];
+      markDirty(); render();
+    }));
+
+    li.querySelectorAll(".editor [data-f]").forEach((el) => el.addEventListener("input", () => {
+      if (el.type === "checkbox") p[el.dataset.f] = el.checked;
+      else if (el.value === "" && (el.dataset.f === "filmLabel" || el.dataset.f === "filmUnavailable")) delete p[el.dataset.f];
+      else p[el.dataset.f] = el.value;
+      // brand-new projects (no media on disk yet) keep their slug in sync with the title
+      if (el.dataset.f === "title" && !state.media[p.slug]) {
+        const base = slugify(p.title);
+        if (base !== p.slug) { const s = uniqueSlug(base); open.delete(p.slug); p.slug = s; open.add(s); }
+      }
+      markDirty();
+    }));
+
+    li.querySelectorAll("[data-proxy]").forEach((b) => b.addEventListener("click", (e) => {
+      e.preventDefault(); b.closest("label").querySelector("input[type=file]").click();
+    }));
+    const up = $("[data-upstills]", li);
+    if (up) up.addEventListener("change", () => uploadStills(p, up.files));
+    const upP = $("[data-upposter]", li);
+    if (upP) upP.addEventListener("change", () => uploadMedia(p, "poster", upP.files[0]));
+    const upL = $("[data-uploop]", li);
+    if (upL) upL.addEventListener("change", () => uploadMedia(p, "loop", upL.files[0]));
+  });
+}
+
+const uniqueSlug = (base) => {
+  const taken = new Set(sections().flatMap((s) => (s.items || []).map((p) => p.slug)));
+  let s = base, n = 2;
+  while (taken.has(s)) s = `${base}-${n++}`;
+  return s;
+};
+
+/* ---------- uploads ---------- */
+const toJpeg = async (file, maxW = 1600, q = 0.82) => {
+  const bmp = await createImageBitmap(file, { imageOrientation: "from-image" });
+  const scale = Math.min(1, maxW / bmp.width);
+  const c = document.createElement("canvas");
+  c.width = Math.round(bmp.width * scale);
+  c.height = Math.round(bmp.height * scale);
+  c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
+  const blob = await new Promise((r) => c.toBlob(r, "image/jpeg", q));
+  return blob;
+};
+
+const b64 = (blob) => new Promise((r) => {
+  const fr = new FileReader();
+  fr.onload = () => r(fr.result.split(",")[1]);
+  fr.readAsDataURL(blob);
+});
+
+async function uploadStills(p, files) {
+  if (!files.length) return;
+  if (dirty) return setStatus("save your text changes first, then upload", true);
+  try {
+    setStatus(`resizing ${files.length} photo(s)...`);
+    const payload = [];
+    for (const f of files) payload.push({ data: await b64(await toJpeg(f)) });
+    setStatus("uploading...");
+    const r = await api(`/api/stills/${p.slug}`, { method: "POST", body: JSON.stringify({ files: payload }) });
+    state = { data: r.data, media: r.media };
+    setStatus("photos uploaded, site republished");
+    render();
+  } catch (e) { setStatus(e.message, true); }
+}
+
+async function uploadMedia(p, kind, file) {
+  if (!file) return;
+  if (dirty) return setStatus("save your text changes first, then upload", true);
+  try {
+    setStatus(`uploading ${kind}...`);
+    const blob = kind === "poster" ? await toJpeg(file) : file;
+    const r = await api(`/api/media/${p.slug}`, { method: "POST", body: JSON.stringify({ kind, data: await b64(blob) }) });
+    state = { data: r.data, media: r.media };
+    setStatus(`${kind} uploaded, site republished`);
+    render();
+  } catch (e) { setStatus(e.message, true); }
+}
+
+document.addEventListener("click", async (e) => {
+  const del = e.target.closest("[data-delstill]");
+  if (!del) return;
+  const li = del.closest("li.row");
+  const p = sections()[li.dataset.si].items[li.dataset.pi];
+  if (!confirm("delete this still?")) return;
+  try {
+    const r = await api(`/api/stills/${p.slug}/${del.dataset.delstill}`, { method: "DELETE" });
+    state = { data: r.data, media: r.media };
+    setStatus("still deleted, site republished");
+    render();
+  } catch (err) { setStatus(err.message, true); }
+});
+
+/* ---------- save / load / auth ---------- */
+$("#bio").addEventListener("input", () => { state.data.bio = $("#bio").value; markDirty(); });
+$("#email").addEventListener("input", () => { state.data.email = $("#email").value; markDirty(); });
+
+$("#save").addEventListener("click", async () => {
+  try {
+    setStatus("saving...");
+    const r = await api("/api/content", { method: "PUT", body: JSON.stringify({ data: state.data }) });
+    state = { data: r.data, media: r.media };
+    dirty = false;
+    setStatus("saved, site republished");
+    render();
+  } catch (e) { setStatus(e.message, true); }
+});
+
+$("#logout").addEventListener("click", async () => { await api("/api/logout", { method: "POST" }).catch(() => {}); showLogin(); });
+
+function showLogin() { $("#app").classList.add("hidden"); $("#login").classList.remove("hidden"); }
+
+$("#loginform").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  $("#loginerr").textContent = "";
+  try {
+    await api("/api/login", { method: "POST", body: JSON.stringify({ password: $("#pw").value }) });
+    await boot();
+  } catch (err) { $("#loginerr").textContent = err.message; }
+});
+
+async function boot() {
+  const r = await api("/api/content");
+  state = r;
+  dirty = false;
+  $("#login").classList.add("hidden");
+  $("#app").classList.remove("hidden");
+  setStatus("loaded");
+  render();
+}
+
+boot().catch(() => showLogin());
+</script>
+</body>
+</html>
