@@ -276,17 +276,22 @@ const b64 = (blob) => new Promise((r) => {
   fr.readAsDataURL(blob);
 });
 
+const doneMsg = (r, what) => setStatus(r.queued ? `${what}, publishing (live in about a minute)` : `${what}, site republished`);
+
 async function uploadStills(p, files) {
   if (!files.length) return;
   if (dirty) return setStatus("save your text changes first, then upload", true);
   try {
-    setStatus(`resizing ${files.length} photo(s)...`);
-    const payload = [];
-    for (const f of files) payload.push({ data: await b64(await toJpeg(f)) });
-    setStatus("uploading...");
-    const r = await api(`/api/stills/${p.slug}`, { method: "POST", body: JSON.stringify({ files: payload }) });
+    let r;
+    let i = 0;
+    for (const f of files) {
+      i += 1;
+      setStatus(`uploading photo ${i} of ${files.length}...`);
+      const data = await b64(await toJpeg(f));
+      r = await api(`/api/stills/${p.slug}`, { method: "POST", body: JSON.stringify({ files: [{ data }] }) });
+    }
     state = { data: r.data, media: r.media };
-    setStatus("photos uploaded, site republished");
+    doneMsg(r, "photos uploaded");
     render();
   } catch (e) { setStatus(e.message, true); }
 }
@@ -299,7 +304,7 @@ async function uploadMedia(p, kind, file) {
     const blob = kind === "poster" ? await toJpeg(file) : file;
     const r = await api(`/api/media/${p.slug}`, { method: "POST", body: JSON.stringify({ kind, data: await b64(blob) }) });
     state = { data: r.data, media: r.media };
-    setStatus(`${kind} uploaded, site republished`);
+    doneMsg(r, `${kind} uploaded`);
     render();
   } catch (e) { setStatus(e.message, true); }
 }
@@ -313,7 +318,7 @@ document.addEventListener("click", async (e) => {
   try {
     const r = await api(`/api/stills/${p.slug}/${del.dataset.delstill}`, { method: "DELETE" });
     state = { data: r.data, media: r.media };
-    setStatus("still deleted, site republished");
+    doneMsg(r, "still deleted");
     render();
   } catch (err) { setStatus(err.message, true); }
 });
@@ -328,7 +333,7 @@ $("#save").addEventListener("click", async () => {
     const r = await api("/api/content", { method: "PUT", body: JSON.stringify({ data: state.data }) });
     state = { data: r.data, media: r.media };
     dirty = false;
-    setStatus("saved, site republished");
+    doneMsg(r, "saved");
     render();
   } catch (e) { setStatus(e.message, true); }
 });
