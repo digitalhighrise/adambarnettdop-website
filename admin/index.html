@@ -101,6 +101,12 @@ input[type=file] { display: none; }
 </div>
 
 <script>
+// GitHub Pages serves the domain but cannot run the /api functions; send the
+// admin to its Vercel home where the API lives. Remove once DNS points at Vercel.
+if (location.hostname.endsWith("adambarnettdop.com")) {
+  location.replace("https://adambarnettdop-website.vercel.app/admin");
+}
+
 let state = null;   // {data, media}
 let dirty = false;
 
