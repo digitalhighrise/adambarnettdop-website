@@ -1,15 +1,27 @@
-name: deploy to vercel
+name: build + deploy
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 concurrency:
   group: deploy
   cancel-in-progress: true
+permissions:
+  contents: write
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # GitHub Pages serves the committed HTML, so admin commits (stills,
+      # projects.json) must be followed by a rebuild committed back to main.
+      - run: node tools/build.mjs
+      - name: commit rebuilt pages
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet || { git commit -m "rebuild pages after admin edit"; git pull --rebase origin main; git push origin main; }
       - run: npm i -g vercel
       - run: vercel deploy --prod --yes --token=${{ secrets.VERCEL_TOKEN }}
         env:
